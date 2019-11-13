@@ -12,6 +12,7 @@ const huntSchema = new mongoose.Schema({
   description: { type: String, required: true },
   players: { type: Number, default: 0 },
   winner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 module.exports = mongoose.model('Hunt', huntSchema);

@@ -2,11 +2,14 @@ const Hunt = require('../models/Hunt');
 const successHandler = require('../utils/successHandler');
 const errorHandler = require('../utils/errorHandler');
 const addHuntService = require('../services/hunt/addHunt');
+const adminAuth = require('../utils/adminAuth');
 
 exports.addHunt = async (req, res) => {
   try {
-    // admin auth
-    const hunt = await addHuntService.createHuntModel(req.body);
+    const authToken = req.header('authorization');
+    const user = await adminAuth.adminAuth(authToken);
+    req.body.createdBy = user._id;
+    const hunt = await addHuntService.createHuntModel(req.body).save();
     successHandler(res, 201, hunt, null);
   } catch(e) {
     errorHandler(res, e, 'addHunt');

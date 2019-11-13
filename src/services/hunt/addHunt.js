@@ -1,7 +1,7 @@
 const Hunt = require('../../models/Hunt');
 
 exports.createHuntModel = ({ 
-  prize, prizePic, lat, lon, tokens, description 
+  prize, prizePic, lat, lon, tokens, description, createdBy,
 }) => {
   return new Hunt({
     prize,
@@ -12,5 +12,6 @@ exports.createHuntModel = ({
     },
     tokens,
     description,
+    createdBy,
   });
 };
