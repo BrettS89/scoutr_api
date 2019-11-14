@@ -19,6 +19,6 @@ exports.createHuntModel = ({
     state,
     stateAbv,
     zip,
-    fullAddress: `${city}, ${stateAbv}, ${zip}`,
+    fullAddress: `${city2}, ${stateAbv}, ${zip}`,
   });
 };
