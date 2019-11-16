@@ -6,9 +6,10 @@ const adminAuth = require('../utils/adminAuth');
 
 exports.addHunt = async (req, res) => {
   try {
-    const authToken = req.header('authorization');
-    const user = await adminAuth.adminAuth(authToken);
-    req.body.createdBy = user._id;
+    // const authToken = req.header('authorization');
+    // const user = await adminAuth.adminAuth(authToken);
+    // req.body.createdBy = user._id;
+    req.body.createdBy = '5dd011395bc49803608f345a';
     const hunt = await addHuntService.createHuntModel(req.body).save();
     successHandler(res, 201, hunt, null);
   } catch(e) {

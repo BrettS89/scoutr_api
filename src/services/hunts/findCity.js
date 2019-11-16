@@ -16,9 +16,10 @@ exports.queryCities = async (searchTerm) => {
         location: true,
       }, 
     },
-  ]).limit(20).lean();
-
+  ]).limit(20)
+  console.log(cities.length);
   if (!cities.length) return null;
+  console.log('inn');
   return cities;
 };
 
@@ -36,7 +37,7 @@ exports.getUniqueLocations = (cities) => {
   const cityTable = {};
   cities.forEach(c => {
     if (!cityTable[c.fullAddress]) {
-      uniqueLocations.push(c.fullAddress);
+      uniqueLocations.push(c);
       cityTable[c.fullAddress] = true;
     }
   });
