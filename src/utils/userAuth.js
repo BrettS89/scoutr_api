@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const keys = require('../config');
 
-exports.userAuth = async token => {
+module.exports = async token => {
   if (!token) {
     throw {
       status: 401,
@@ -22,7 +22,7 @@ exports.userAuth = async token => {
     }
   }
 
-  const decodedUser = jwt.decode(receivedToken);
+  const decodedUser = jwt.decode(token);
 
   if (!decodedUser) {
     throw {

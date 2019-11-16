@@ -1,15 +1,14 @@
 const Hunt = require('../../models/Hunt');
 
 exports.cleanSearchTerm = (searchTerm) => {
-  return searchTerm.replace(/\W/, '').toLowerCase();
+  return searchTerm.replace(/[^\w\s]/g,'').toLowerCase();
 };
 
 exports.queryCities = async (searchTerm) => {
   const cities = await Hunt.aggregate([
     { $match: { $text: { $search:  searchTerm } } },
     { $sort: { score: { $meta: "textScore" } } },
-    { $project: { 
-        // city: true,
+    { $project: {
         city2: true,
         stateAbv: true,
         zip: true,
@@ -17,9 +16,7 @@ exports.queryCities = async (searchTerm) => {
       }, 
     },
   ]).limit(20)
-  console.log(cities.length);
   if (!cities.length) return null;
-  console.log('inn');
   return cities;
 };
 
