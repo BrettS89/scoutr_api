@@ -2,6 +2,7 @@ const successHandler = require('../utils/successHandler');
 const errorHandler = require('../utils/errorHandler');
 const userAuth = require('../utils/userAuth');
 const findCityService = require('../services/hunts/findCity');
+const findHuntsService = require('../services/hunts/findHunts');
 
 exports.findCity = async (req, res) => {
   try {
@@ -14,5 +15,16 @@ exports.findCity = async (req, res) => {
     successHandler(res, 200, uniqueLocations, null);
   } catch(e) {
     errorHandler(res, e, 'findCity');
+  }
+};
+
+exports.findHunts = async (req, res) => {
+  try {
+    await userAuth(req.header('authorization'));
+    const { lat, lon } = findHuntsService.formatLatLon(req.query);
+    const hunts = await findHuntsService.geoSearch(lat, lon);
+    successHandler(res, 200, hunts, null);
+  } catch(e) {
+    errorHandler(res, e, 'findHunts');
   }
 };
