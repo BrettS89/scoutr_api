@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const huntSchema = new mongoose.Schema({
+  title: { type: String, required: true },
   prize: { type: String, required: true },
   prizeCost: { type: Number, required: true },
   prizePic: { type: String, required: true },
