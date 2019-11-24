@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const successHandler = require('../utils/successHandler');
 const errorHandler = require('../utils/errorHandler');
+const userAuth = require('../utils/userAuth');
 const registerService = require('../services/user/register');
 const loginService = require('../services/user/login');
 
@@ -29,7 +30,7 @@ exports.login = async ({ body: { email, password } }, res) => {
     if (!user) {
       throw {
         status: 404,
-        error: new Error('no user found'),
+        error: new Error('No user found with this email'),
       };
     }
     const passwordMatch = loginService.checkPassword(password, user.password);
@@ -48,7 +49,15 @@ exports.login = async ({ body: { email, password } }, res) => {
 
 exports.isLoggedIn = async (req, res) => {
   try {
-
+    const user = await userAuth(req.header('authorization'));
+    const foundUser = await User.findById(user._id);
+    if (!foundUser) {
+      throw {
+        status: 404,
+        error: new Error('Could not find user'),
+      };
+    }
+    successHandler(res, 200, foundUser, null);
   } catch(e) {
     errorHandler(res, e, 'isLoggedIn');
   }
