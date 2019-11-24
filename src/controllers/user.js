@@ -1,3 +1,4 @@
+const User = require('../models/User');
 const successHandler = require('../utils/successHandler');
 const errorHandler = require('../utils/errorHandler');
 const registerService = require('../services/user/register');
@@ -17,7 +18,7 @@ exports.register = async (req, res) => {
 
 exports.login = async ({ body: { email, password } }, res) => {
   try {
-    const user = await findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       throw {
         status: 404,

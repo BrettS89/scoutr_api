@@ -3,6 +3,7 @@ const errorHandler = require('../utils/errorHandler');
 const userAuth = require('../utils/userAuth');
 const findCityService = require('../services/hunts/findCity');
 const findHuntsService = require('../services/hunts/findHunts');
+const getMyHuntsService = require('../services/hunts/getMyHunts');
 
 exports.findCity = async (req, res) => {
   try {
@@ -26,5 +27,15 @@ exports.findHunts = async (req, res) => {
     successHandler(res, 200, hunts, null);
   } catch(e) {
     errorHandler(res, e, 'findHunts');
+  }
+};
+
+exports.getMyHunts = async (req, res) => {
+  try {
+    const user = await userAuth(req.header('authorization'));
+    const myHunts = await getMyHuntsService.myHuntsQuery(user._id, req.query.offset);
+    successHandler(res, 200, myHunts, null);
+  } catch(e) {
+    errorHandler(res, e, 'getMyHunts');
   }
 };
