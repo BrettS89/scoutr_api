@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
   tokens: { type: Number, default: 0 },
   stripeId: { type: String, default: null },
   isAdmin: { type: Boolean, default: false },
+  lat: { type: Number, default: null },
+  lon: { type: Number, default: null },
 });
 
 module.exports = mongoose.model('User', userSchema);

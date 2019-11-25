@@ -4,6 +4,8 @@ const errorHandler = require('../utils/errorHandler');
 const userAuth = require('../utils/userAuth');
 const registerService = require('../services/user/register');
 const loginService = require('../services/user/login');
+const getMyHuntsService = require('../services/hunts/getMyHunts');
+const isLoggedInService = require('../services/user/isLoggedIn');
 
 exports.register = async (req, res) => {
   try {
@@ -57,7 +59,10 @@ exports.isLoggedIn = async (req, res) => {
         error: new Error('Could not find user'),
       };
     }
-    successHandler(res, 200, foundUser, null);
+    const myHunts = await getMyHuntsService.myHuntsQuery(user._id, 0);
+    const updatedUser = await isLoggedInService.updateUser(foundUser).save();
+    const data = isLoggedInService.formatResponse(updatedUser, myHunts);
+    successHandler(res, 200, data, null);
   } catch(e) {
     errorHandler(res, e, 'isLoggedIn');
   }
