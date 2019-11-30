@@ -1,8 +1,13 @@
 const Hunt = require('../models/Hunt');
+const User = require('../models/User');
 const successHandler = require('../utils/successHandler');
 const errorHandler = require('../utils/errorHandler');
 const addHuntService = require('../services/hunt/addHunt');
 const adminAuth = require('../utils/adminAuth');
+const userAuth = require('../utils/userAuth');
+const createEnteredHuntService = require('../services/enteredHunt/createEnteredHunt');
+const getMyHuntsService = require('../services/hunts/getMyHunts');
+
 
 exports.addHunt = async (req, res) => {
   try {
@@ -17,9 +22,30 @@ exports.addHunt = async (req, res) => {
   }
 };
 
-exports.playHunt = async (req, res) => {
+exports.enterHunt = async (req, res) => {
   try {
-
+    let user = await userAuth(req.header('authorization'));
+    user = await User.findById(user._id);
+    const hunt = await Hunt.findById(req.body.huntId);
+    if (hunt.winner) {
+      throw {
+        status: 400,
+        error: new Error('Somebody already won this hunt'),
+      };
+    }
+    if (hunt.tokens > user.tokens) {
+      throw {
+        status: 400,
+        error: new Error('You don\'t have enough tokens to enter this hunt'),
+      };
+    }
+    user.tokens -= hunt.tokens;
+    user = await user.save();
+    await createEnteredHuntService.createEnteredHunt(user._id, hunt._id).save();
+    hunt.players += 1;
+    await hunt.save();
+    const myHunts = await getMyHuntsService.myHuntsQuery(user._id, 0);
+    successHandler(res, 201, { myHunts, userData: user }, null);
   } catch(e) {
     errorHandler(res, e, 'playHunt');
   }

@@ -1,0 +1,3 @@
+exports.updateTokens = (user, huntTokens) => {
+
+};
