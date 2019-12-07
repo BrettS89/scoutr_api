@@ -21,9 +21,10 @@ exports.findCity = async (req, res) => {
 
 exports.findHunts = async (req, res) => {
   try {
-    await userAuth(req.header('authorization'));
+    const user = await userAuth(req.header('authorization'));
     const { lat, lon } = findHuntsService.formatLatLon(req.query);
-    const hunts = await findHuntsService.geoSearch(lat, lon);
+    const hunts = await findHuntsService.fancyGeoSearch(user._id, lat, lon);
+    console.log(hunts);
     successHandler(res, 200, hunts, null);
   } catch(e) {
     errorHandler(res, e, 'findHunts');

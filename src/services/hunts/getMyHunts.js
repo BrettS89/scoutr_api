@@ -1,8 +1,9 @@
-const Hunt = require('../../models/Hunt');
+const EnteredHunt = require('../../models/EnteredHunt');
 
 exports.myHuntsQuery = (_id, offset) => {
-  return Hunt.find({ userId: _id })
+  return EnteredHunt.find({ userId: _id })
     .sort({ dateCreated: 'desc' })
+    .populate('huntId')
     .skip(offset)
     .limit(20)
     .lean();

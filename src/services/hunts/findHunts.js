@@ -9,7 +9,7 @@ exports.formatLatLon = (coords) => {
 };
 
 exports.geoSearch = async (lat, lon) => {
-  return await Hunt.find({
+  return Hunt.find({
     location: {
       $nearSphere: {
         $geometry: {
@@ -22,4 +22,37 @@ exports.geoSearch = async (lat, lon) => {
       }
     },
   });
+};
+
+exports.fancyGeoSearch = async (userId, lat, lon) => {
+  return Hunt.aggregate([
+    { $geoNear: {
+      near: { type: "Point", coordinates: [ lon , lat ] },
+      distanceField: "dist.location",
+      maxDistance: 300,
+    },
+  },
+  {
+    '$lookup': {
+      'from': 'enteredhunts',
+      'let': { 'id': "$_id" },
+      'pipeline': [
+        { '$match':
+           { '$expr':
+              { '$and':
+                 [
+                   { '$eq': [ "$huntId",  "$$id" ] },
+                   { '$eq': [ "$userId", userId ] }
+                 ]
+              }
+           }
+        },
+     ],
+      'as': "enteredArray",
+    },
+  },
+  {
+    '$match': { 'enteredArray': { '$eq': [] } }
+  },
+  ]);
 };

@@ -47,7 +47,7 @@ exports.enterHunt = async (req, res) => {
     const myHunts = await getMyHuntsService.myHuntsQuery(user._id, 0);
     successHandler(res, 201, { myHunts, userData: user }, null);
   } catch(e) {
-    errorHandler(res, e, 'playHunt');
+    errorHandler(res, e, 'enterHunt');
   }
 };
 
