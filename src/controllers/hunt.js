@@ -53,7 +53,20 @@ exports.enterHunt = async (req, res) => {
 
 exports.wonHunt = async (req, res) => {
   try {
-
+    let user = await userAuth(req.header('authorization'));
+    const hunt = await Hunt.findById(req.body.hunt);
+    if (hunt.finished) {
+      throw {
+        status: 400,
+        error: new Error('This hunt has already been finished'),
+      };
+    }
+    hunt.winner = user._id;
+    hunt.finished = true;
+    // trigger notification
+    // create new document type?
+    await hunt.save();
+    successHandler(res, 200, null, null);
   } catch(e) {
     errorHandler(res, e, 'wonHunt');
   }
