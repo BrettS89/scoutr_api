@@ -24,7 +24,6 @@ exports.findHunts = async (req, res) => {
     const user = await userAuth(req.header('authorization'));
     const { lat, lon } = findHuntsService.formatLatLon(req.query);
     const hunts = await findHuntsService.fancyGeoSearch(user._id, lat, lon);
-    console.log(hunts);
     successHandler(res, 200, hunts, null);
   } catch(e) {
     errorHandler(res, e, 'findHunts');
@@ -34,7 +33,7 @@ exports.findHunts = async (req, res) => {
 exports.getMyHunts = async (req, res) => {
   try {
     const user = await userAuth(req.header('authorization'));
-    const myHunts = await getMyHuntsService.myHuntsQuery(user._id, req.query.offset);
+    const myHunts = await getMyHuntsService.myHuntsQuery(user._id, Number(req.query.offset));
     successHandler(res, 200, myHunts, null);
   } catch(e) {
     errorHandler(res, e, 'getMyHunts');
