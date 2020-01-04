@@ -35,6 +35,14 @@ exports.purchaseTokens = async (req, res) => {
   try {
     const user = await userAuth(req.header('authorization'));
     let foundUser = await User.findById(user._id);
+    if (!foundUser.stripeId) {
+      throw {
+        status: 400,
+        error: new Error('No stripe ID'),
+      };
+    }
+    const amount = req.body.tokens * 100;
+    await stripe.processPayment(foundUser.stripeId, amount);
     foundUser.tokens += req.body.tokens;
     foundUser = await foundUser.save();
     successHandler(res, 200, foundUser, null);

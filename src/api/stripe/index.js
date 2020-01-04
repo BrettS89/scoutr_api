@@ -26,4 +26,14 @@ exports.updateCustomer = (customerId, source) => {
       source,
     },
   );
-}
+};
+
+exports.processPayment = (customerId, amount) => {
+  return stripe.charges.create(
+    {
+      amount,
+      currency: 'usd',
+      customer: customerId,
+    },
+  );
+};
