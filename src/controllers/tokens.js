@@ -15,7 +15,7 @@ exports.addCreditCard = async (req, res) => {
       req.body.cvc,
     );
     const response = await stripe.createCustomer(id, foundUser.email);
-    foundUser.stripeId = res.id;
+    foundUser.stripeId = response.id;
     foundUser.cardType = brand;
     foundUser.cardLast4 = last4;
     const updatedUser = await foundUser.save(foundUser);
