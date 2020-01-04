@@ -18,3 +18,12 @@ exports.createCustomer = (source, email) => {
     email,
   });
 };
+
+exports.updateCustomer = (customerId, source) => {
+  return stripe.customers.update(
+    customerId,
+    { 
+      source,
+    },
+  );
+}

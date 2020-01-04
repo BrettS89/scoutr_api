@@ -7,15 +7,21 @@ const stripe = require('../api/stripe');
 exports.addCreditCard = async (req, res) => {
   try {
     const user = await userAuth(req.header('authorization'));
-    const foundUser = await user.findById(user._id);
-    const { id, card: { brand, last4 } } = await stripe.addCreditCard(
+    const foundUser = await User.findById(user._id);
+    const { id, card: { brand, last4 } } = await stripe.createCardToken(
       req.body.cardNumber,
-      req.body.expMonth,
+      req.body.exp_month,
       req.body.exp_year,
       req.body.cvc,
     );
-    const response = await stripe.createCustomer(id, foundUser.email);
-    foundUser.stripeId = response.id;
+
+    if (foundUser.stripeId) {
+      await stripe.updateCustomer(foundUser.stripeId, id);
+    } else {
+      const response = await stripe.createCustomer(id, foundUser.email);
+      foundUser.stripeId = response.id;
+    }
+
     foundUser.cardType = brand;
     foundUser.cardLast4 = last4;
     const updatedUser = await foundUser.save(foundUser);
