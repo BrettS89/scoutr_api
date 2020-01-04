@@ -7,6 +7,7 @@ const keys = require('./src/config');
 const userRoutes = require('./src/routes/user');
 const huntRoutes = require('./src/routes/hunt');
 const huntsRoutes = require('./src/routes/hunts');
+const tokensRoutes = require('./src/routes/tokens');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/hunts', huntsRoutes);
 app.use('/hunt', huntRoutes);
 app.use('/user', userRoutes);
+app.use('/tokens', tokensRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

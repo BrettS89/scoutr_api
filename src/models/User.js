@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
   logins: { type: Number, default: 0 },
   tokens: { type: Number, default: 0 },
   stripeId: { type: String, default: null },
+  cardType: { type: String, default: null },
+  cardLast4: { type: String, default: null },
   isAdmin: { type: Boolean, default: false },
   lat: { type: Number, default: null },
   lon: { type: Number, default: null },

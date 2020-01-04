@@ -1,0 +1,20 @@
+const keys = require('../../config');
+const stripe = require('stripe')(keys.stripeSecretKey);
+
+exports.createCardToken = (number, exp_month, exp_year, cvc) => {
+  return stripe.tokens.create({
+    card: {
+      number,
+      exp_month,
+      exp_year,
+      cvc,
+    },
+  });
+};
+
+exports.createCustomer = (source, email) => {
+  return stripe.customers.create({
+    source,
+    email,
+  });
+};
